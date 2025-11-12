@@ -6,17 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 
    public class UgliestDogsModel : PageModel
    {
+      //List of dogs to populate the dorpdown menu
        public List<SelectListItem> DogList { get; set; }
        public Dog SelectedDog { get; set; }
 
+      //Handle get requests 
        public void OnGet()
        {
            LoadDogList();
        }
 
+      //Handle post requests
        public void OnPost(string selectedDog)
        {
            LoadDogList();
+           //If dog was selected, retrieve details from the db
            if (!string.IsNullOrEmpty(selectedDog))
            {
                SelectedDog = GetDogById(int.Parse(selectedDog));
@@ -26,6 +30,8 @@ using Microsoft.AspNetCore.Mvc;
        private void LoadDogList()
        {
            DogList = new List<SelectListItem>();
+
+           //Connect to the SQLite database
            using (var connection = new SqliteConnection("Data Source=UgliestDogs.db"))
            {
                connection.Open();
@@ -45,6 +51,7 @@ using Microsoft.AspNetCore.Mvc;
            }
        }
 
+      //Retrieves full details of a dog by its ID
        private Dog GetDogById(int id)
        {
            using (var connection = new SqliteConnection("Data Source=UgliestDogs.db"))
@@ -68,7 +75,7 @@ using Microsoft.AspNetCore.Mvc;
                    }
                }
            }
-           return null;
+           return null; //If no dog was found 
        }
    }
 
@@ -79,4 +86,5 @@ using Microsoft.AspNetCore.Mvc;
        public string Breed { get; set; }
        public int Year { get; set; }
        public string ImageFileName { get; set; }
+
    }
